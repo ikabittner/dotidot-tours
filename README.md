@@ -8,7 +8,7 @@ Hotová je **homepage tour** (tři cesty: Feed setup, Revive zombies, Analytics 
 
 ### 1. Přístup k repu
 
-Repo je privátní. Potřebuješ účet na GitHubu a pozvánku do repa (přijde e-mailem, nebo ji uvidíš na github.com v notifikacích). Pak přihlas git na svém počítači ke GitHubu, nejjednodušeji přes GitHub CLI:
+Repo je veřejné: stáhnout a vyzkoušet si ho může kdokoli bez přihlášení (krok 2). Ukládat změny (vlastní tour) může jen ten, koho Jiří pozve do repa jako collaboratora. S pozvánkou přihlas git na svém počítači ke GitHubu, nejjednodušeji přes GitHub CLI:
 
 ```bash
 gh auth login            # jednou; GitHub CLI: https://cli.github.com
