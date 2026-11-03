@@ -4,29 +4,52 @@ Klikací product tour pro web dotidot.io. Návštěvník si vyzkouší Dotidot p
 
 Hotová je **homepage tour** (tři cesty: Feed setup, Revive zombies, Analytics & MCP). Na ní je postavený sdílený rám a knihovna obrazovek, ze kterých se skládají další tour.
 
-## Rychlý start
+## Jak začít
 
-Potřeba: Python 3.11+, Git.
+### 1. Přístup k repu
+
+Repo je privátní. Potřebuješ účet na GitHubu a pozvánku do repa (přijde e-mailem, nebo ji uvidíš na github.com v notifikacích). Pak přihlas git na svém počítači ke GitHubu, nejjednodušeji přes GitHub CLI:
 
 ```bash
-git clone https://github.com/ikabittner/dotidot-tours.git && cd dotidot-tours
-pip install -r requirements.txt
-python3 -m playwright install chromium
-
-python3 tools/build.py                          # postaví všechny tour do dist/
-python3 tools/test_tour.py homepage             # proklikání na desktopu, kontaktní archy v out/
-python3 -m http.server -d dist 8000             # http://localhost:8000/homepage/
+gh auth login            # jednou; GitHub CLI: https://cli.github.com
 ```
 
-## Práce s Claude Code
+### 2. Stáhnout a připravit
 
-Otevři složku v Claude Code. `CLAUDE.md` mu řekne pravidla a strukturu, skill `/new-tour` provede celým postupem. Stačí napsat třeba:
+Potřeba: Git a Python 3.11+.
+
+```bash
+git clone https://github.com/ikabittner/dotidot-tours.git
+cd dotidot-tours
+python3 -m venv .venv && source .venv/bin/activate     # vlastní prostředí pro Python balíčky
+pip install -r requirements.txt
+python3 -m playwright install chromium
+```
+
+Kontrola, že všechno běží:
+
+```bash
+python3 tools/build.py                          # postaví všechny tour do dist/
+python3 tools/test_tour.py homepage             # proklikání na desktopu, kontaktní archy v out/, na konci OK
+python3 -m http.server -d dist 8000             # pak v prohlížeči http://localhost:8000/homepage/
+```
+
+### 3. Spustit Claude Code v té složce
+
+```bash
+cd dotidot-tours
+claude
+```
+
+Claude Code musí běžet právě ve složce `dotidot-tours` (v terminálu, nebo ji zvol jako pracovní složku v aplikaci). Jen tak si sám načte `CLAUDE.md` s pravidly a nabídne skill `/new-tour`.
+
+Na zkoušku se ho zeptej třeba „Co je v tomhle repu a jak udělám novou tour?“. Na novou tour stačí napsat:
 
 > Udělej tour pro ROAS strategii, nahradí Storylane demo na stránce Product Strategies.
 
-Claude se doptá na cíl, navrhne osnovu, ověří obrazovky v demo účtu, postaví tour, otestuje ji na desktopu i telefonu a ukáže kontaktní archy.
+Claude se doptá na cíl, navrhne osnovu, ověří obrazovky v demo účtu, postaví tour, otestuje ji na desktopu i telefonu a ukáže kontaktní archy. Hotovou tour ulož do repa (commit a push, Claude to udělá na požádání).
 
-Co si připojit:
+## Co si připojit
 - **Claude in Chrome** (rozšíření do Chromu) a v Chromu přihlášení do demo účtu Dotidotu (organizace 2979). Jen na čtení obrazovek; v demo účtu se nic neukládá.
 - **Figma** (volitelně) s přístupem do složky App Design, pro obrazovky, které v demu nejsou.
 - Design system ds.dotidot.io a demo feed jsou veřejné, není potřeba nic.
