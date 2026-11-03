@@ -1,0 +1,542 @@
+<title>__TITLE__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a white page (the homepage around it) with one grape block = exactly what gets embedded. Inside: the path
+   tabs, one browser window with the real Dotidot UI, a tour card anchored to the highlighted control, Hoppy on the
+   window's bottom-left corner, the stepper. Single deliberate look. */
+:root {
+  --grape: #5A0078;
+  --grape-deep: #44005C;
+  --scrim: rgba(36, 0, 50, .38);
+  --page: #FFFFFF;
+  --paper: #FFFFFF;
+  --cta: #FF264A;
+  --cta-hover: #E81E40;
+  --lilac: #F3E8F7;
+  --ink: #1A1B1F;
+  --muted: #5F566A;
+  --line: #E6DDEB;
+  --go: #32D583;
+  --go-soft: rgba(50, 213, 131, .28);
+  --go-ink: #1D7A4A;
+  --green: #32D583;
+  --green-ink: #1F3A12;
+  --on-grape: #FFFFFF;
+  --on-grape-soft: rgba(255, 255, 255, .72);
+  --display: "Poppins", "Inter", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@font-face { font-family: "Google Sans Code"; font-weight: 600; src: url(__EYES_FONT__) format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 500; font-display: swap; src: url(__POPPINS_500__) format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 600; font-display: swap; src: url(__POPPINS_600__) format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-display: swap; src: url(__INTER_400__) format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; font-display: swap; src: url(__INTER_500__) format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-display: swap; src: url(__INTER_600__) format("woff2"); }
+html, body { height: 100%; }
+body { background: var(--page); color: var(--ink); font: 400 15px/1.5 var(--body); -webkit-font-smoothing: antialiased; }
+.page { padding-block: 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.tour { max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; padding: 28px 40px 30px; border-radius: 28px; color: var(--on-grape);
+  background: radial-gradient(1200px 700px at 50% 42%, rgba(255, 255, 255, .07), transparent 70%), var(--grape); }
+.wrapw { width: 100%; max-width: 1240px; margin: 0 auto; box-sizing: border-box; }
+
+/* path tabs: the only header element */
+.head { display: flex; justify-content: center; }
+.head[hidden] { display: none; }
+/* ?embed: the website section around the iframe gives the spacing, so the white page margin goes */
+.embed .page { padding: 0; }
+.paths { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(255, 255, 255, .1); flex-wrap: wrap; justify-content: center; }
+.paths button { font: 500 14px/1 var(--body); color: var(--on-grape-soft); background: none; border: 0; border-radius: 999px; padding: 9px 16px; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; transition: color .12s ease, background .12s ease; }
+.paths button:hover { color: var(--on-grape); background: rgba(255, 255, 255, .08); }
+.paths button[aria-current="true"]:hover { background: var(--paper); color: var(--grape); }
+.paths button[aria-current="true"] { background: var(--paper); color: var(--grape); font-weight: 600; }
+.paths .soon { font: 600 10px/1 var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 4px 6px; border-radius: 6px; background: rgba(255, 255, 255, .14); color: var(--on-grape-soft); }
+button:focus-visible { outline: 3px solid var(--paper); outline-offset: 2px; }
+
+/* stage */
+.stagew { position: relative; }
+.win { position: relative; width: 100%; aspect-ratio: 1600 / 952; border-radius: 16px; overflow: hidden; background: var(--paper);
+  box-shadow: 0 18px 44px rgba(20, 0, 32, .38); }
+.scaler { position: absolute; left: 0; top: 0; width: 1600px; height: 952px; transform-origin: 0 0; }
+.wbar { position: absolute; inset: 0 0 auto 0; height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 20px; background: #F1F0F3; border-bottom: 1px solid #E3E1E6; }
+.wbar i { width: 12px; height: 12px; border-radius: 50%; background: #CFCBD4; }
+.wbar .url { margin-left: 16px; display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px; border-radius: 999px; background: #fff; border: 1px solid #E3E1E6; font: 500 16px/1 var(--body); color: #55575F; }
+.wview { position: absolute; left: 0; top: 52px; width: 1600px; height: 900px; overflow: hidden; background: #fff; }
+.wview iframe { position: absolute; inset: 0; width: 1600px; height: 900px; border: 0; transition: opacity .45s ease; }
+.wview iframe.off { opacity: 0; visibility: hidden; }
+.scaler.blur { filter: blur(3px) saturate(.9); }
+.veil { position: absolute; inset: 0; background: var(--scrim); opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+.veil.on { opacity: 1; }
+.veil.again { pointer-events: auto; cursor: pointer; }
+
+/* hotspot: purely visual, the click lands on the real control in the app. Only the green frame marks it */
+.hot { position: absolute; border-radius: 10px; border: 0; padding: 0; background: transparent; opacity: 0; pointer-events: none;
+  box-shadow: 0 0 0 2px var(--go), 0 0 0 6px var(--go-soft); transition: opacity .25s ease; }
+.hot.on { opacity: 1; }
+.hot.read { box-shadow: 0 0 0 2px var(--go); }
+.hot:focus-visible { outline: 3px solid var(--grape); outline-offset: 6px; }
+.hot::after { content: ""; position: absolute; inset: -2px; border-radius: 12px; animation: ping 1.8s ease-out infinite; }
+.hot.read::after { display: none; }
+.hot.nudge { animation: nudge .45s ease; }
+@keyframes nudge { 0%, 100% { transform: none; } 35% { transform: scale(1.06); } 70% { transform: scale(.98); } }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(50, 213, 131, .55); } 80%, 100% { box-shadow: 0 0 0 14px rgba(50, 213, 131, 0); } }
+
+/* Hoppy on the window edge */
+.hoppy { position: absolute; width: 0; height: 0; z-index: 4; pointer-events: none; }
+.av { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.av img { position: absolute; display: block; max-width: none; pointer-events: none; }
+.av__vw { position: absolute; border-radius: 50%; overflow: hidden; -webkit-mask-image: radial-gradient(circle closest-side, #000 74%, transparent 100%); mask-image: radial-gradient(circle closest-side, #000 74%, transparent 100%); }
+.av__vw img { left: 50%; top: 50%; }
+.av__eyes { position: absolute; }
+
+/* tour card */
+.card { position: absolute; z-index: 5; width: 340px; background: var(--paper); color: var(--ink); border-radius: 16px; padding: 18px 18px 14px;
+  box-shadow: 0 24px 60px rgba(20, 0, 32, .4); opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .25s ease; pointer-events: none; }
+.card.on { opacity: 1; transform: none; pointer-events: auto; }
+.card .arrow { position: absolute; width: 14px; height: 14px; background: var(--paper); transform: rotate(45deg); border-radius: 2px; }
+.card h2 { margin: 0 0 6px; font: 600 21px/1.25 var(--display); letter-spacing: -.01em; text-wrap: balance; color: var(--ink); }
+.card p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.card .hint { margin-left: 6px; display: flex; align-items: center; gap: 8px; font: 600 13px/1.3 var(--body); color: var(--go-ink); }
+.card .hint::before { content: ""; width: 9px; height: 9px; border-radius: 2.5px; background: var(--go); box-shadow: 0 0 0 3px var(--go-soft); flex: none; }
+.card .row { margin-top: 14px; display: flex; align-items: center; gap: 8px; }
+.card .row .sp { flex: 1; }
+.card .hint.shake { animation: shake .4s ease; }
+@keyframes shake { 0%, 100% { transform: none; } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-3px); } }
+.acts { display: inline-flex; align-items: center; gap: 6px; }
+.acts i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.acts i.done { background: var(--grape); }
+.acts i.now { background: var(--go); }
+.btn { white-space: nowrap; font: 600 14px/1 var(--body); border-radius: 9px; padding: 10px 14px; border: 1px solid transparent; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.btn.ghost { background: transparent; color: var(--muted); border-color: var(--line); }
+.btn.main { background: var(--grape); color: #fff; }
+.btn.cta { font-size: 17px; padding: 15px 26px; border-radius: 10px; background: var(--cta); color: #fff; }
+.btn.cta:hover { background: var(--cta-hover); }
+.btn[disabled] { opacity: .4; cursor: default; }
+.btn:focus-visible { outline: 3px solid var(--grape); outline-offset: 2px; }
+
+/* intro / end panel centred over the window */
+.card.center { width: min(520px, calc(100% - 48px)); padding: 28px 28px 24px; }
+.card.center h2 { font-size: 32px; line-height: 1.15; letter-spacing: -.02em; margin: 0 0 10px; }
+.card.center p { font-size: 16px; }
+.card.center .row { margin-top: 20px; gap: 10px; }
+.more { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.more button { display: flex; align-items: center; gap: 12px; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px; cursor: pointer; font: inherit; transition: border-color .12s ease; }
+.more .pic { flex: none; width: 32px; height: 32px; }
+.more .mt { min-width: 0; }
+.more button:hover { border-color: var(--grape); }
+.more b { display: block; font: 600 14px/1.3 var(--body); color: var(--ink); }
+.more span { font: 500 12px/1 var(--body); color: var(--grape); }
+
+/* progress */
+.prog { display: flex; align-items: center; gap: 14px; padding-left: 64px; margin-top: 6px; }
+.prog ol { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; flex: 1; min-width: 0; }
+.prog li { flex: 1; }
+.prog li button { display: block; width: 100%; height: 6px; border-radius: 3px; border: 0; padding: 0; background: rgba(255, 255, 255, .2); cursor: pointer; }
+.prog li.done button { background: rgba(255, 255, 255, .6); }
+.prog li.now button { background: var(--paper); }
+.prog .lbl { font: 500 13px/1 var(--body); color: var(--on-grape-soft); white-space: nowrap; font-variant-numeric: tabular-nums; min-width: 92px; text-align: right; }
+
+/* narrow screens: the card docks under the window */
+@media (max-width: 760px) {
+  .card, .card.center { position: static; width: auto; margin-top: 14px; transform: none; opacity: 1; display: none; }
+  .card.on { display: block; }
+  .card .arrow { display: none; }
+  .card, .card.center { margin-top: 34px; }
+  .card.center h2 { font-size: 24px; }
+  .more { grid-template-columns: 1fr; }
+  .page { padding-block: 24px; }
+  .tour { padding: 18px 16px 20px; border-radius: 20px; }
+  .prog { padding-left: 30px; gap: 10px; }
+  .prog .lbl { min-width: 0; font-size: 12px; }
+  .card .row { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hot::after, .hot.nudge, .card .hint.shake { animation: none; }
+  .card, .veil, .wview iframe { transition: none; }
+}
+</style>
+
+<div class="page">
+<div class="tour">
+  <header class="head wrapw">
+    <nav class="paths" aria-label="Tour paths" id="paths"></nav>
+  </header>
+
+  <section class="stagew wrapw" id="stagew" aria-label="Interactive Dotidot tour">
+    <div class="win" id="win">
+      <div class="scaler" id="scaler">
+        <div class="wbar"><i></i><i></i><i></i><span class="url" id="wurl">app.dotidot.io</span></div>
+        <div class="wview" id="wview"></div>
+      </div>
+      <div class="veil" id="veil"></div>
+      <button class="hot" id="hot" type="button" aria-label="Continue"></button>
+    </div>
+    <div class="hoppy" id="hoppy" aria-hidden="true"></div>
+    <div class="card" id="card" role="dialog" aria-live="polite">
+      <div class="arrow" id="arrow"></div>
+      <div id="cardBody"></div>
+    </div>
+  </section>
+
+  <nav class="prog wrapw" aria-label="Tour progress">
+    <ol id="progList"></ol>
+    <span class="lbl" id="progLbl"></span>
+  </nav>
+</div>
+</div>
+
+<script src="hoppy.js" data-assets="brand/"></script>
+<script>
+(function () {
+  'use strict';
+  // ---------- helpers for tour.js: each returns a function of the scene document (or window + document) ----------
+  const q = (sel) => (d) => d.querySelector(sel);
+  const root = (sel) => (d) => d.querySelector(sel).closest('[data-input-root]');
+  // a camera rect around two elements of a scene (for stops where the scene's own camera does not show the control)
+  const frameAround = (a, b) => (w, d) => {
+    const r1 = w.E.rectOf(d.querySelector(a)), r2 = w.E.rectOf(d.querySelector(b));
+    const x = Math.min(r1.x, r2.x), y = Math.min(r1.y, r2.y);
+    return w.E.fitSafe({ x, y, w: Math.max(r1.x + r1.w, r2.x + r2.w) - x, h: Math.max(r1.y + r1.h, r2.y + r2.h) - y }, 40, 0);
+  };
+  // ---------- tour content (tours/<tour>/tour.js): PATHS, ORDER, ICONS, SCENES ----------
+/*__TOUR__*/
+  const TOUR = /*__META__*/;
+  const SPEED = 0.9;                          // a touch slower than the video scenes were authored
+  const FULL = { x: 0, y: 0, w: 1600 };       // the whole app screen, sidebar included
+
+  // ---------- elements ----------
+  const $ = (id) => document.getElementById(id);
+  const stagew = $('stagew'), win = $('win'), scaler = $('scaler'), veil = $('veil'), hot = $('hot'), card = $('card'), cardBody = $('cardBody'), arrow = $('arrow');
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let S = 1, cur = -1, busy = false, scene = null, mode = 'intro', pathKey = ORDER[0];
+  let P = PATHS[pathKey], GROUPS = P.groups, STEPS = P.steps;
+
+  // ---------- scene frames, loaded when a path needs them ----------
+  const frames = {}, loaded = {};
+  Object.keys(SCENES).forEach((k) => {
+    const f = document.createElement('iframe');
+    f.className = 'off'; f.title = SCENES[k].title; f.tabIndex = -1;
+    $('wview').appendChild(f); frames[k] = f;
+  });
+  function load(sc) {
+    if (!loaded[sc]) {
+      loaded[sc] = new Promise((res) => {
+        const f = frames[sc];
+        f.src = SCENES[sc].src + '?nocap';
+        (function poll() { (f.contentWindow && typeof f.contentWindow.setSplit === 'function' && f.contentDocument.readyState !== 'loading') ? res() : setTimeout(poll, 60); })();
+      }).then(() => wireFrame(sc));
+    }
+    return loaded[sc];
+  }
+  const loadPath = (k) => Promise.all([...new Set(PATHS[k].steps.map((s) => s.sc))].map(load));
+
+  // ---------- Hoppy ----------
+  const HR = 50;
+  const hop = $('hoppy');
+  const av = window.Hoppy ? Hoppy.make(hop, HR) : null;
+  const t0 = performance.now() / 1000;
+  const now = () => performance.now() / 1000 - t0;
+  const HI = { eyes: [[0, '?']], loadEnd: 0, blinks: [], gaze: [[0, 0.55, 0.32]] };
+  for (let b = 2.6; b < 3600; b += 3.9) HI.blinks.push(b);
+  function hoppyLook(x, y, eye) {
+    const t = now();
+    if (eye && HI.eyes[HI.eyes.length - 1][1] !== eye) HI.eyes.push([t, eye]);
+    const hb = hop.getBoundingClientRect(), dx = x - hb.left, dy = y - hb.top;
+    const yaw = 0.3 + 0.4 * Math.min(1, Math.max(0, dx / win.clientWidth));
+    const pitch = Math.max(-0.1, Math.min(0.55, -dy / win.clientHeight * 0.7));
+    HI.gaze.push([t, yaw, pitch]);
+  }
+  (function loop() { if (av) Hoppy.draw(av, HI, now(), 1, true, 0); requestAnimationFrame(loop); })();
+
+  // ---------- layout ----------
+  function layout() {
+    S = win.clientWidth / 1600;
+    scaler.style.transform = `scale(${S})`;
+    const k = Math.max(0.42, Math.min(1, win.clientWidth / 1240));
+    hop.style.left = (win.offsetLeft + 6 * k) + 'px';
+    hop.style.top = (win.offsetTop + win.clientHeight - 6 * k) + 'px';
+    hop.style.transform = `scale(${k})`;
+    if (mode === 'step') place();
+    else if (mode !== 'play') center();
+  }
+  const narrow = () => window.matchMedia('(max-width: 760px)').matches;
+
+  // ---------- scenes ----------
+  const doc = (sc) => frames[sc].contentDocument;
+  const split = (sc, tc, cam) => frames[sc].contentWindow.setSplit(tc, cam);
+  function showScene(sc) {
+    scene = sc;
+    Object.keys(frames).forEach((k) => frames[k].classList.toggle('off', k !== sc));
+    const url = SCENES[sc].url ?? 'app.dotidot.io';
+    $('wurl').textContent = url; $('wurl').style.visibility = url ? '' : 'hidden';
+  }
+  // a stop's camera: a time on the scene's camera track, or a rect (a function of the scene that returns one)
+  function camOf(st) { const c = st.cam ?? st.tc; return typeof c === 'function' ? c(frames[st.sc].contentWindow, doc(st.sc)) : c; }
+  function setStep(i) {
+    const st = STEPS[i];
+    if (st.sc !== scene) showScene(st.sc);
+    split(st.sc, st.tc, camOf(st));
+  }
+  const eio = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+  // hold on the whole screen, then zoom in to the step's framing
+  function establish(st, hold, done) {
+    const w = frames[st.sc].contentWindow, c = camOf(st), to = typeof c === 'object' ? c : w.camAt(c);
+    split(st.sc, st.tc, FULL);
+    if (reduce) { setTimeout(() => { split(st.sc, st.tc, to); done(); }, hold); return; }
+    setTimeout(() => {
+      const start = performance.now(), dur = 1300;
+      (function f() {
+        const k = eio(Math.min(1, (performance.now() - start) / dur));
+        split(st.sc, st.tc, { x: FULL.x + (to.x - FULL.x) * k, y: FULL.y + (to.y - FULL.y) * k, w: FULL.w + (to.w - FULL.w) * k });
+        if (k < 1) requestAnimationFrame(f); else done();
+      })();
+    }, hold);
+  }
+  function tween(sc, a, ca, b, cb, done) {
+    const dur = Math.max(0.05, (b - a) / SPEED) * 1000, start = performance.now(), w = frames[sc].contentWindow;
+    const num = typeof ca === 'number' && typeof cb === 'number';
+    const A = num ? null : (typeof ca === 'object' ? ca : w.camAt(ca)), B = num ? null : (typeof cb === 'object' ? cb : w.camAt(cb));
+    const camK = (k) => { if (num) return ca + (cb - ca) * k; const e = eio(k); return { x: A.x + (B.x - A.x) * e, y: A.y + (B.y - A.y) * e, w: A.w + (B.w - A.w) * e }; };
+    if (reduce) { split(sc, b, camK(1)); done(); return; }
+    (function f() {
+      const k = Math.min(1, (performance.now() - start) / dur);
+      split(sc, a + (b - a) * k, camK(k));
+      if (k < 1) requestAnimationFrame(f); else done();
+    })();
+  }
+  function closeDD() {
+    Object.keys(frames).forEach((k) => { if (!loaded[k]) return; const d = doc(k); if (d) d.querySelectorAll('.tour-dd.open').forEach((x) => x.classList.remove('open')); });
+  }
+  function openDD(st) {
+    closeDD();
+    if (!st.dd) return;
+    const d = doc(st.sc), w = frames[st.sc].contentWindow, dd = d.getElementById(st.dd.id), at = st.dd.at(d), r = w.E.rectOf(at);
+    dd.classList.add('open');
+    const left = st.dd.align === 'right' ? r.x + r.w - dd.offsetWidth : r.x;
+    dd.style.left = left + 'px'; dd.style.top = (r.y + r.h + 6) + 'px';
+    at.classList.add('in-focus');
+  }
+
+  // ---------- target geometry (window coordinates, px) ----------
+  function targetRect(st, pick) {
+    const el = (pick || st.el)(doc(st.sc));
+    const r = el.getBoundingClientRect(), pad = 6;
+    let x = r.left - pad, y = r.top - pad, w = r.width + 2 * pad, h = r.height + 2 * pad;
+    x = Math.max(4, x); y = Math.max(4, y); w = Math.min(1596 - x, w); h = Math.min(896 - y, h);
+    return { x: x * S, y: (y + 52) * S, w: w * S, h: h * S };
+  }
+
+  // ---------- card ----------
+  function hide() { card.classList.remove('on'); hot.classList.remove('on'); }
+  function render(st) {
+    const g = GROUPS[st.g], click = st.act === 'click';
+    const acts = STEPS.filter((x) => x.g === st.g && x.act === 'click').length, h = st.h || 0;
+    const dots = click && acts > 1 ? `<span class="acts" aria-label="Action ${h + 1} of ${acts}">` +
+      Array.from({ length: acts }, (_, i) => `<i class="${i < h ? 'done' : i === h ? 'now' : ''}"></i>`).join('') + '</span>' : '';
+    cardBody.innerHTML =
+      `<h2>${g.title}</h2><p>${g.body}</p>` +
+      `<div class="row"><button class="btn ghost" type="button" id="bBack" ${st.g === 0 ? 'disabled' : ''}>Back</button>` +
+      (click ? `<div class="hint" id="hint">${g.hints[h]}</div><span class="sp"></span>${dots}`
+             : `<button class="btn main" type="button" id="bNext">${g.next || (st.g === GROUPS.length - 1 ? 'Finish' : 'Next')}</button>`) + '</div>';
+    $('bBack').onclick = back;
+    if (!click) $('bNext').onclick = advance;
+  }
+  function nudge() {
+    hot.classList.remove('nudge'); void hot.offsetWidth; hot.classList.add('nudge');
+    const hint = $('hint'); if (hint) { hint.classList.remove('shake'); void hint.offsetWidth; hint.classList.add('shake'); }
+  }
+  // clicks inside the app: only the highlighted control moves the tour on, everything else stays a live but inert UI
+  // decided by where the click lands, not by which element got it: invisible layers (a closed modal) must not swallow it
+  function onAppClick(sc, e) {
+    if (busy || mode !== 'step') return;
+    const st = STEPS[cur];
+    if (st.sc !== sc || st.act !== 'click') return;
+    const r = st.el(doc(sc)).getBoundingClientRect(), pad = 6;
+    const inside = e.clientX >= r.left - pad && e.clientX <= r.right + pad && e.clientY >= r.top - pad && e.clientY <= r.bottom + pad;
+    if (inside) advance(); else nudge();
+  }
+  function wireFrame(sc) {
+    const d = doc(sc);
+    const css = d.createElement('style');
+    css.textContent = '#cursor{display:none!important} body{user-select:none;-webkit-user-select:none}';
+    d.head.appendChild(css);
+    // Base UI highlights menu items from script; mimic it so dropdown items react to the pointer like in the app
+    d.addEventListener('pointerover', (e) => {
+      const it = e.target.closest && e.target.closest('[data-dropdown-item]');
+      d.querySelectorAll('[data-dropdown-item][data-highlighted]').forEach((x) => { if (x !== it) x.removeAttribute('data-highlighted'); });
+      if (it) it.setAttribute('data-highlighted', '');
+    });
+    ['mousedown', 'pointerdown'].forEach((ev) => d.addEventListener(ev, (e) => e.preventDefault(), true));
+    d.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); onAppClick(sc, e); }, true);
+  }
+  function place() {
+    const st = STEPS[cur], r = targetRect(st);
+    hot.style.left = r.x + 'px'; hot.style.top = r.y + 'px'; hot.style.width = r.w + 'px'; hot.style.height = r.h + 'px';
+    hot.classList.toggle('read', st.act !== 'click');
+    hot.setAttribute('aria-label', st.act === 'click' ? GROUPS[st.g].hints[st.h || 0] : GROUPS[st.g].title);
+    const wb = win.getBoundingClientRect(), sb = stagew.getBoundingClientRect();
+    hoppyLook(wb.left + r.x + r.w / 2, wb.top + r.y + r.h / 2, GROUPS[st.g].eye);
+    card.classList.remove('center');
+    arrow.style.display = '';
+    if (narrow()) { arrow.style.display = 'none'; card.style.left = card.style.top = ''; return; }
+    const ox = wb.left - sb.left, oy = wb.top - sb.top;
+    // the card sits beside the target, or beside a bigger element around it (near) so it never covers what the step is about
+    const n = st.near ? targetRect(st, st.near) : r;
+    const hx = ox + n.x, hy = oy + n.y, cw = card.offsetWidth, ch = card.offsetHeight, gap = 18, W = sb.width, H = sb.height;
+    const cy = oy + r.y + r.h / 2;
+    const fitsR = hx + n.w + gap + cw <= W - 8, fitsL = hx - gap - cw >= 8;
+    let x, y, side;
+    if (fitsR) { side = 'r'; x = hx + n.w + gap; y = cy - ch / 2; }
+    else if (fitsL) { side = 'l'; x = hx - gap - cw; y = cy - ch / 2; }
+    else if (hy + n.h + gap + ch <= H - 8) { side = 'b'; y = hy + n.h + gap; x = hx + n.w / 2 - cw / 2; }
+    else { side = 't'; y = hy - gap - ch; x = hx + n.w / 2 - cw / 2; }
+    x = Math.max(8, Math.min(W - cw - 8, x)); y = Math.max(8, Math.min(H - ch - 8, y));
+    card.style.left = x + 'px'; card.style.top = y + 'px';
+    const ax = side === 'r' ? -7 : side === 'l' ? cw - 7 : Math.max(16, Math.min(cw - 30, ox + r.x + r.w / 2 - x - 7));
+    const ay = side === 'b' ? -7 : side === 't' ? ch - 7 : Math.max(16, Math.min(ch - 30, cy - y - 7));
+    arrow.style.left = ax + 'px'; arrow.style.top = ay + 'px';
+  }
+  function center() {
+    card.classList.add('center');
+    arrow.style.display = 'none';
+    if (narrow()) { card.style.left = card.style.top = ''; return; }
+    const wb = win.getBoundingClientRect(), sb = stagew.getBoundingClientRect();
+    card.style.left = (wb.left - sb.left + (wb.width - card.offsetWidth) / 2) + 'px';
+    card.style.top = (wb.top - sb.top + (wb.height - card.offsetHeight) / 2) + 'px';
+  }
+
+  // ---------- flow ----------
+  function showStep() {
+    mode = 'step';
+    const st = STEPS[cur];
+    openDD(st);
+    doc(st.sc).querySelectorAll('.dd-hl').forEach((x) => x.classList.remove('dd-hl'));   // the pointer does the highlighting now
+    render(st);
+    progress();
+    requestAnimationFrame(() => {
+      place(); hot.classList.add('on'); card.classList.add('on');
+      const f = st.act === 'click' ? hot : $('bNext'); if (f) f.focus({ preventScroll: true });
+    });
+  }
+  function go(i) {
+    cur = i; setStep(i); veil.classList.remove('on', 'again'); scaler.classList.remove('blur'); showStep();
+  }
+  function advance() {
+    if (busy || mode !== 'step') return;
+    const st = STEPS[cur], nx = STEPS[cur + 1];
+    busy = true; mode = 'play'; hide(); closeDD();
+    const ca = camOf(st);
+    if (!nx) {
+      tween(st.sc, st.tc, ca, st.exit, st.exit, () => { busy = false; end(); });
+      return;
+    }
+    if (nx.sc === st.sc) {
+      tween(st.sc, st.tc, ca, nx.tc, camOf(nx), () => { cur++; busy = false; showStep(); });
+    } else {
+      tween(st.sc, st.tc, ca, st.exit, st.exit, () => {
+        if (nx.establish) {
+          split(nx.sc, nx.tc, FULL);
+          setTimeout(() => { showScene(nx.sc); establish(nx, 900, () => { cur++; busy = false; showStep(); }); }, 250);
+        } else {
+          split(nx.sc, nx.tc, camOf(nx));
+          setTimeout(() => { showScene(nx.sc); setTimeout(() => { cur++; busy = false; showStep(); }, reduce ? 0 : 480); }, 250);
+        }
+      });
+    }
+  }
+  function back() {
+    if (busy || cur < 0) return;
+    const g = STEPS[cur].g;
+    if (g === 0) return;
+    hide(); closeDD(); go(STEPS.findIndex((s) => s.g === g - 1));
+  }
+  function jumpGroup(g) {
+    if (busy || mode === 'loading') return;
+    const i = STEPS.findIndex((s) => s.g === g);
+    if (i >= 0) { hide(); closeDD(); go(i); }
+  }
+  hot.addEventListener('click', () => { if (STEPS[cur] && STEPS[cur].act === 'click') advance(); });   // keyboard: Enter on the focused hotspot
+
+  function startTour() {
+    const st0 = STEPS[0];
+    hide(); closeDD(); mode = 'play'; busy = true; cur = 0;
+    showScene(st0.sc); split(st0.sc, st0.tc, st0.establish ? FULL : camOf(st0));
+    veil.classList.remove('on', 'again'); scaler.classList.remove('blur');
+    progress();
+    if (st0.establish) establish(st0, 1100, () => { busy = false; showStep(); });
+    else setTimeout(() => { busy = false; showStep(); }, reduce ? 0 : 350);
+  }
+  veil.addEventListener('click', () => { if (mode === 'end' && !busy) startTour(); });
+  function intro() {
+    mode = 'intro'; cur = -1; closeDD(); hide(); veil.classList.remove('again');
+    const st0 = STEPS[0];
+    showScene(st0.sc); split(st0.sc, st0.tc, st0.establish ? FULL : camOf(st0));
+    veil.classList.add('on'); scaler.classList.add('blur');
+    cardBody.innerHTML = `<h2>${P.intro.title}</h2><p>${P.intro.body}</p>` +
+      `<div class="row"><button class="btn main" type="button" id="bStart">Start the tour</button></div>`;
+    $('bStart').onclick = startTour;
+    progress();
+    requestAnimationFrame(() => { center(); card.classList.add('on'); });
+    hoppyLook(0, 0, '?');
+  }
+  function end() {
+    mode = 'end'; cur = STEPS.length;
+    veil.classList.add('on');
+    const others = ORDER.filter((k) => k !== pathKey);
+    cardBody.innerHTML = `<h2>${P.end.title}</h2><p>${P.end.body}</p>` +
+      `<div class="row"><a class="btn cta" href="${TOUR.cta.href}" target="_blank" rel="noopener">${TOUR.cta.label}</a></div>` +
+      (others.length ? `<div class="more">${others.map((k) => `<button type="button" data-path="${k}">${ICONS[k] || ''}<div class="mt"><b>${PATHS[k].label}</b><span>Start this tour</span></div></button>`).join('')}</div>` : '');
+    veil.classList.add('again');
+    cardBody.querySelectorAll('.more button').forEach((b) => { b.onclick = () => selectPath(b.dataset.path); });
+    progress();
+    requestAnimationFrame(() => { center(); card.classList.add('on'); });
+    const t = now(); HI.eyes.push([t, '^']); HI.gaze.push([t, 0.5, 0.3]);
+  }
+
+  // ---------- paths (tabs) ----------
+  const tabs = $('paths');
+  tabs.innerHTML = ORDER.map((k) => `<button type="button" data-path="${k}">${PATHS[k].label}</button>`).join('');
+  tabs.querySelectorAll('button').forEach((b) => { b.onclick = () => selectPath(b.dataset.path); });
+  if (ORDER.length < 2) document.querySelector('.head').hidden = true;     // one path: no tabs
+  function selectPath(k) {
+    if (busy) return;
+    pathKey = k; P = PATHS[k]; GROUPS = P.groups; STEPS = P.steps;
+    tabs.querySelectorAll('button').forEach((b) => b.setAttribute('aria-current', b.dataset.path === k ? 'true' : 'false'));
+    hide(); closeDD(); veil.classList.remove('again'); mode = 'loading'; busy = true;
+    buildProgress();
+    loadPath(k).then(() => { busy = false; intro(); });
+  }
+
+  // ---------- progress ----------
+  const list = $('progList');
+  function buildProgress() {
+    list.innerHTML = GROUPS.map((g, i) => `<li><button type="button" aria-label="Step ${i + 1}: ${g.title}" title="${g.title}"></button></li>`).join('');
+    [...list.querySelectorAll('button')].forEach((b, i) => { b.onclick = () => jumpGroup(i); });
+    progress();
+  }
+  function progress() {
+    const g = cur < 0 ? -1 : cur >= STEPS.length ? GROUPS.length : STEPS[cur].g;
+    [...list.children].forEach((li, i) => { li.className = i < g ? 'done' : i === g ? 'now' : ''; });
+    $('progLbl').textContent = g < 0 ? 'Not started' : g >= GROUPS.length ? 'Done' : `Step ${g + 1} of ${GROUPS.length}`;
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' && mode === 'step' && STEPS[cur].act !== 'click') advance();
+    if (e.key === 'ArrowLeft' && mode === 'step') back();
+  });
+
+  // ---------- boot ----------
+  window.addEventListener('resize', layout);
+  layout();
+  selectPath(ORDER[0]);
+  document.fonts && document.fonts.ready.then(layout);
+  window.dotidotTour = { id: TOUR.id, order: ORDER.slice(), select: selectPath };   // used by tools/test_tour.py
+
+  // ---------- embedding: the page tells the parent its height (see docs/embed.md) ----------
+  if (new URLSearchParams(location.search).has('embed')) document.documentElement.classList.add('embed');
+  if (window.parent !== window && window.ResizeObserver) {
+    const pg = document.querySelector('.page');
+    const post = () => window.parent.postMessage({ type: 'dotidot-tour:height', tour: TOUR.id, height: Math.ceil(pg.getBoundingClientRect().height) }, '*');
+    new ResizeObserver(post).observe(pg);
+  }
+})();
+</script>

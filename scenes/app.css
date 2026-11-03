@@ -1,0 +1,106 @@
+/* Shared app chrome and stage for all scenes. Only --dds-* tokens for colour, type, radius, shadow. */
+:root {
+  --c-text: var(--dds-color-text-default);
+  --c-muted: var(--dds-color-text-muted);
+  --c-subtle: var(--dds-color-text-subtle);
+  --c-line: var(--dds-color-outline-bold);
+  --c-line-soft: var(--dds-color-outline-default);
+  --c-surface: var(--dds-color-surface-default);
+  --c-white: var(--dds-color-surface-lowest);
+  --c-primary: var(--dds-color-primary-default);
+  --rail-w: 56px;
+  --ctx-w: 236px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--c-white); overflow: hidden; }
+body { font-family: var(--dds-font-family-body); color: var(--c-text); font-size: var(--dds-text-body-base); -webkit-font-smoothing: antialiased; }
+
+/* ---------- stage ---------- */
+#viewport { position: fixed; inset: 0; overflow: hidden; background: var(--c-white); }
+#stage { position: absolute; left: 0; top: 0; width: 1600px; transform-origin: 0 0; will-change: transform; }
+#cursor { position: absolute; left: 0; top: 0; z-index: 60; pointer-events: none; opacity: 0; filter: drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+#cursor svg { position: relative; z-index: 2; display: block; }
+#cursor .ripple { position: absolute; left: -16px; top: -16px; width: 36px; height: 36px; border-radius: 50%; background: var(--dds-color-primary-default); opacity: 0; z-index: 1; }
+#dim { position: absolute; left: 0; top: 0; width: 1600px; height: 3000px; background: #1b2230; opacity: 0; z-index: 20; pointer-events: none; }
+
+/* ---------- captions (viewport space, outside the camera) ---------- */
+#captions { position: absolute; inset: 0; pointer-events: none; z-index: 100; }
+.cap { position: absolute; left: 64px; bottom: 60px; max-width: 1100px; padding: 16px 26px 18px; border-radius: 18px;
+  background: rgba(27, 34, 48, .92); color: #fff; box-shadow: 0 18px 40px rgba(27,34,48,.28);
+  font-family: var(--dds-font-family-display); font-weight: 600; font-size: 40px; line-height: 1.18; letter-spacing: -0.01em; }
+.cap.br { left: auto; right: 64px; }
+.cap.tl { bottom: auto; top: 56px; }
+.cap.c { left: 50%; bottom: 70px; transform: translateX(-50%); }
+.cap .w { display: inline-block; will-change: transform, opacity; }
+.cap b { font-weight: 700; color: var(--dds-color-primary-subtle); }
+
+/* ---------- app frame ---------- */
+.app { width: 1600px; min-height: 900px; background: var(--c-white); display: flex; flex-direction: column; }
+.frame { display: flex; align-items: stretch; flex: 1; min-height: 840px; }
+[data-header-subheader-start] { display: flex; align-items: center; gap: 10px; min-width: 0; }
+[data-header-subheader-end] { display: flex; align-items: center; gap: 10px; }
+.rail { width: var(--rail-w); flex: none; border-right: 1px solid var(--c-line); background: var(--c-white); }
+.rail nav { height: 100%; }
+.ctx { width: var(--ctx-w); flex: none; border-right: 1px solid var(--c-line); background: var(--c-white); }
+.ctx nav { height: 100%; width: 100% !important; }
+.ctx [data-side-panel-nav-rail] { width: 100% !important; border-right: 0 !important; }
+.ctx [data-side-panel-nav-item] { min-height: 30px; }
+.cn-addon { margin-left: auto; display: inline-flex; align-items: center; }
+.cn-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dds-color-positive-default); display: inline-block; }
+.content { flex: 1; min-width: 0; background: var(--c-surface); padding: 20px 20px 40px; }
+.page-title { font-family: var(--dds-font-family-display); font-weight: 600; font-size: var(--dds-text-display-3xl); margin: 2px 0 16px; }
+
+/* subheader entity title */
+.ent { display: inline-flex; align-items: center; gap: 10px; }
+.ent-ic { display: inline-flex; }
+.ent-name { font-family: var(--dds-font-family-display); font-weight: 600; font-size: var(--dds-text-display-xl); white-space: nowrap; }
+.sub-link { display: inline-flex; align-items: center; gap: 6px; color: var(--dds-color-primary-bold); font-weight: 600; font-size: var(--dds-text-body-md); white-space: nowrap; }
+.hd-ent { color: var(--dds-color-icon-muted); }
+
+/* ---------- cards and forms (app sections) ---------- */
+.card { background: var(--c-white); border: 1px solid var(--c-line-soft); border-radius: var(--dds-radius-base); box-shadow: var(--dds-shadow-xs); }
+.sec-card { padding: 16px 18px 18px; margin-bottom: 14px; }
+.sec-card h3 { font-family: var(--dds-font-family-display); font-weight: 600; font-size: var(--dds-text-display-xl); margin: 0 0 12px; }
+.lbl { font-size: var(--dds-text-body-sm); font-weight: 500; color: var(--c-text); margin-bottom: 6px; display: flex; gap: 4px; align-items: center; }
+.lbl .req { color: var(--dds-color-attention-default); }
+.muted { color: var(--c-muted); }
+.subtle { color: var(--c-subtle); }
+.row { display: flex; align-items: center; gap: 10px; }
+.grow { flex: 1; min-width: 0; }
+
+/* text "input" built with the DS input look */
+.fld { height: 32px; border: 1px solid var(--dds-color-secondary-subtle); border-radius: var(--dds-radius-md); background: var(--c-white);
+  box-shadow: var(--dds-shadow-xs); display: flex; align-items: center; padding: 0 10px; font-size: var(--dds-text-body-md); color: var(--c-text); gap: 6px; white-space: nowrap; overflow: hidden; }
+.fld.focus { border-color: var(--dds-color-primary-default); box-shadow: 0 0 0 3px var(--dds-color-primary-faint); }
+.fld .ph { color: var(--c-subtle); }
+.typing::after { content: ""; display: inline-block; width: 1.5px; height: 1.05em; background: var(--dds-color-primary-default); margin-left: 1px; vertical-align: -2px; }
+
+/* toast position */
+.toast-wrap { position: absolute; right: 24px; top: 72px; z-index: 40; width: 360px; }
+
+/* thumbnails */
+.thumb { width: 36px; height: 36px; object-fit: contain; border-radius: var(--dds-radius-md); background: #fff; border: 1px solid var(--c-line-soft); flex: none; }
+mark.hl { background: linear-gradient(transparent 55%, var(--dds-color-primary-subtle) 55%); background-size: 0% 100%; background-repeat: no-repeat; color: inherit; padding: 0 1px; }
+.screen { position: absolute; left: 0; top: 0; width: 1600px; }
+
+/* context panel: compact like the live app's data source / campaign menu */
+.ctx [data-side-panel-nav-rail] { padding: 14px 8px 16px !important; }
+.ctx [data-side-panel-nav-section] { gap: 1px !important; }
+.ctx [data-side-panel-nav-section] > div:first-child:not([data-side-panel-nav-item]) { padding: 0 8px 4px !important; font-size: 10px !important; letter-spacing: .08em; color: var(--c-subtle) !important; }
+.ctx [data-side-panel-nav-item] { padding: 6px 8px !important; gap: 8px !important; min-height: 30px; border-radius: var(--dds-radius-md) !important; }
+.ctx [data-side-panel-nav-icon] { width: 18px !important; height: 18px !important; border: 0 !important; background: none !important; box-shadow: none !important; color: var(--dds-color-icon-muted) !important; }
+.ctx [data-side-panel-nav-icon] svg { width: 16px !important; height: 16px !important; font-size: 16px !important; }
+.ctx [data-side-panel-nav-label] { font-size: var(--dds-text-body-md) !important; font-weight: 400 !important; color: var(--c-text) !important; overflow: visible !important; text-overflow: clip !important; }
+.ctx [data-side-panel-nav-item][data-active] { background: var(--dds-color-primary-faint) !important; }
+.ctx [data-side-panel-nav-item][data-active] [data-side-panel-nav-label],
+.ctx [data-side-panel-nav-item][data-active] [data-side-panel-nav-icon] { color: var(--dds-color-primary-bold) !important; }
+.ctx [data-side-panel-nav-divider] { margin: 8px 0 !important; }
+.ctx [data-promo-badge] { transform: scale(.82); transform-origin: right center; }
+.ctx [data-side-panel-nav-label] { flex: 0 1 auto !important; white-space: nowrap; }
+
+/* dropdowns the interactive tour opens (hidden in the video) */
+.tour-dd { display: none; position: absolute; left: 0; top: 0; z-index: 40; transform-origin: 0 0; }
+.tour-dd.open { display: block; opacity: 1 !important; }
+.tour-dd [role="menu"] { position: relative; }
+.tour-dd .dd-search { display: flex; align-items: center; color: var(--c-subtle); }
+.tour-dd .dd-hl { background: var(--dds-color-neutral-ghost, var(--dds-color-background-ghost)) !important; }

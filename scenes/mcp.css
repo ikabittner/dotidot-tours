@@ -1,0 +1,13 @@
+/* AI assistant scene: the promo chat card, centred and scaled on a quiet canvas */
+#stage { height: 900px; }
+.mcp-bg { position: absolute; left: 0; top: 0; width: 1600px; height: 900px;
+  background: radial-gradient(900px 600px at 50% 45%, #FBF8FC 0%, #F3EEF6 70%); }
+.vc { position: absolute; left: 470px; top: 158px; width: 483px; height: 584px; transform-origin: 50% 50%; transform: scale(1.32); }   /* left of centre: the tour card sits on the right */
+.chat-card { box-shadow: 0 24px 60px rgba(60, 0, 85, .16); }
+.composer { cursor: text; transition: border-color .12s ease, box-shadow .12s ease; }
+.composer:hover { border-color: #C9C9C9; }
+.composer__send { cursor: pointer; transition: background .12s ease; }
+.btn { cursor: pointer; transition: filter .12s ease; }
+.btn:hover { filter: brightness(.94); }
+.row:hover { background: #FAFAFA; }
+.chat-card .thumb { border: 0; }

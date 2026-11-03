@@ -1,0 +1,57 @@
+/* Campaign product selection + graduation board */
+.sel-body { padding-left: 16px !important; }
+.sel-body .cond-count, .sel-body .where-add { margin-left: 30px; }
+.ps-chip { display: inline-flex; align-items: center; gap: 10px; height: 34px; min-width: 330px; padding: 0 8px 0 12px; border: 1px solid var(--c-line-soft);
+  border-radius: var(--dds-radius-md); background: var(--c-white); box-shadow: var(--dds-shadow-xs); transform-origin: left center; }
+.ps-ic { display: inline-flex; color: var(--dds-color-icon-muted); }
+.ps-name { color: var(--dds-color-primary-bold); font-weight: 600; font-size: var(--dds-text-body-md); }
+.ps-f { margin-left: auto; display: inline-flex; }
+.use { font-size: var(--dds-text-body-md); align-self: center; }
+.use b { color: var(--c-text); }
+.sys-tgl { display: inline-flex; align-items: center; gap: 6px; }
+.tgl-on { width: 28px; height: 16px; border-radius: 99px; background: var(--dds-color-positive-default); position: relative; display: inline-block; }
+.tgl-on i { position: absolute; right: 2px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+.screen { background: var(--c-white); }
+
+/* graduation board */
+.grad { width: 1600px; height: 900px; background: var(--c-surface); position: relative; padding: 52px 70px; }
+.grad-title { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; font-size: var(--dds-text-body-lg); }
+.grad-src { display: inline-flex; align-items: center; gap: 8px; font-family: var(--dds-font-family-display); font-weight: 600; font-size: var(--dds-text-display-xl); }
+.grad-title b { color: var(--dds-color-primary-bold); }
+.grad-row { display: flex; align-items: stretch; gap: 0; }
+.camp { width: 640px; padding: 22px 26px 26px; }
+.camp-head { display: flex; align-items: center; gap: 12px; }
+.camp-ic { display: inline-flex; }
+.camp-name { font-family: var(--dds-font-family-display); font-weight: 600; font-size: var(--dds-text-display-2xl); }
+.camp-sub { color: var(--c-muted); font-size: var(--dds-text-body-md); margin-top: 2px; }
+.camp-badge { margin-left: auto; }
+.camp-count { margin: 18px 0 16px; color: var(--c-muted); font-size: var(--dds-text-body-lg); }
+.camp-count b { font-family: var(--dds-font-family-display); font-weight: 600; font-size: 44px; color: var(--c-text); margin-right: 6px; }
+.g-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.g-cell { height: 122px; border-radius: var(--dds-radius-base); border: 1px solid var(--c-line-soft); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.g-cell img { max-width: 84%; max-height: 84%; object-fit: contain; }
+.zomb .g-cell img { filter: grayscale(1); opacity: .45; }
+.zomb .g-cell { background: var(--dds-color-surface-default); }
+.g-empty { border-style: dashed; border-color: var(--dds-color-positive-default); background: var(--dds-color-positive-faint); opacity: 0; }
+.flow { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; }
+.flow-line { position: absolute; left: 18px; right: 18px; top: 50%; border-top: 2px dashed var(--dds-color-primary-subtle); }
+.flow-badge { position: relative; z-index: 2; }
+.flyer { position: absolute; left: 0; top: 0; width: 120px; height: 104px; object-fit: contain; background: #fff; border-radius: var(--dds-radius-base);
+  border: 2px solid var(--dds-color-positive-default); padding: 8px; box-shadow: 0 16px 36px rgba(27,34,48,.22); opacity: 0; z-index: 10; }
+.hero-tag { position: absolute; z-index: 12; opacity: 0; transform-origin: right bottom; white-space: nowrap; translate: -100% -100%; }
+.hero-tag [data-badge] { white-space: nowrap; }
+.hero-tag [data-badge] { box-shadow: 0 8px 20px rgba(27,34,48,.16); }
+#g-hero { position: relative; }
+
+/* campaign switcher dropdown (positioned under the campaign crumb at runtime) */
+.dd-wrap { position: absolute; left: 0; top: 0; z-index: 40; transform-origin: 0 0; opacity: 0; }
+.dd-wrap [role="menu"] { position: relative; }
+.dd-search { display: flex; align-items: center; color: var(--c-subtle); }
+.dd-check { margin-left: auto; display: inline-flex; color: var(--dds-color-primary-default); }
+.dd-hl { background: var(--dds-color-neutral-ghost, var(--dds-color-background-ghost)) !important; }
+.crumb-open { background: var(--dds-color-background-ghost); border-radius: var(--dds-radius-md); }
+/* ROAS campaign preview below the filter */
+#cr-preview { margin-top: 0; }
+.clk { font-variant-numeric: tabular-nums; }
+.clk-new { font-weight: 700; color: var(--dds-color-positive-default); background: color-mix(in oklab, var(--dds-color-positive-default) 14%, transparent); padding: 2px 9px; border-radius: 999px; }
+#cr-pr-102448 td { transition: none; }
