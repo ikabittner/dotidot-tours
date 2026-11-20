@@ -20,6 +20,7 @@ Hotové scény:
 | Scéna | Obrazovka | Délka | Používá |
 |---|---|---|---|
 | connect | Data sources: +, výběr typu zdroje, formulář Data feed file, import 509 produktů, Data enrichment (Google Merchant Center, Google Ads, Meta) | 9,6 s | homepage/feed |
+| connect_v2 | jako connect, ale výběr typu zdroje jako mřížka 4 boxů, zjednodušený formulář, enrichment Google Ads, Google Analytics 4, Meta (docs/homepage-v2.md) | 9,6 s | homepage-v2/feed |
 | variables | editor textové proměnné (Variable content, výběr proměnných, Preview) | 7,6 s | homepage/feed |
 | sets | nový product set (podmínky, výběr proměnné, Preview, Save) | 8,6 s | homepage/zombies |
 | campaigns | PMax Products selection, přepnutí kampaně v drobečcích, Include/Exclude, Preview po aktualizaci dat | 11 s | homepage/zombies |
