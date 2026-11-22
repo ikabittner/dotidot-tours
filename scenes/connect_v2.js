@@ -8,7 +8,7 @@
   const fnameFld = fname.closest('[data-input-root]'), furlFld = furl.closest('[data-input-root]'), addDs = $('#add-ds');
   const rows = $$('#imp-table tbody tr'), dsCount = $('#ds-count'), busy = $('#ds-status-busy'), done = $('#ds-status');
   const enrPanel = $('#en-panel'), enr = [0, 1, 2].map((i) => $('#en-' + i)), cells = $$('.enr');
-  const URL = 'https://demoshop.dotidot.io/real-demo/products.csv';
+  const URL = 'https://yourstore.com/feed/products.csv';
 
   // measure each screen with only that screen displayed
   const only = (el) => [S1, S2, S3].forEach((s) => { s.style.display = s === el ? '' : 'none'; });
@@ -57,7 +57,7 @@
 
     // screen 2: type name + URL
     fnameFld.classList.toggle('in-focus', t >= 1.98 && t < 2.9);
-    typeText(fname, 'Demo Shop feed', t, 2.05, 26);
+    typeText(fname, 'Your product feed', t, 2.05, 26);
     furlFld.classList.toggle('in-focus', t >= 2.9 && t < 4.4);
     typeText(furl, URL, t, 2.95, 46);
     addDs.style.transform = t >= 4.4 && t < 4.52 ? 'scale(0.96)' : '';
