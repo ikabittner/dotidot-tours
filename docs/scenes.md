@@ -20,11 +20,16 @@ Hotové scény:
 | Scéna | Obrazovka | Délka | Používá |
 |---|---|---|---|
 | connect | Data sources: +, výběr typu zdroje, formulář Data feed file, import 509 produktů, Data enrichment (Google Merchant Center, Google Ads, Meta) | 9,6 s | homepage/feed |
+| connect_v2 | jako connect, ale výběr typu zdroje jako mřížka 4 boxů, zjednodušený formulář, enrichment Google Ads, Google Analytics 4, Meta (docs/homepage-v2.md) | 9,6 s | homepage-v2/feed |
 | variables | editor textové proměnné (Variable content, výběr proměnných, Preview) | 7,6 s | homepage/feed |
 | sets | nový product set (podmínky, výběr proměnné, Preview, Save) | 8,6 s | homepage/zombies |
 | campaigns | PMax Products selection, přepnutí kampaně v drobečcích, Include/Exclude, Preview po aktualizaci dat | 11 s | homepage/zombies |
 | pa | Product analytics, AI Insights panel, Biggest revenue movers (vlastní osa v anim.js) | 10,5 s | homepage/ai |
 | mcp | chat AI asistenta s Dotidot MCP | 9,9 s | homepage/ai |
+| pa_v2, mcp_v2 | kopie pa a mcp pro v2: zdroj Your product feed, „Dotidot for AI“ místo Dotidot MCP (pa_v2 sdílí pa.css a JS s pa) | | homepage-v2/ai |
+| camp_new | Campaigns, modal Create a new campaign, průvodce: Select data source | 4 s | homepage-v2/camp |
+| camp_setup | Campaign setup (přejmenování), Products selection se setem Zombies, Google Merchant Center Data Feed mapping | 6,6 s | homepage-v2/camp |
+| camp_ads | New asset group s náhledem reklam, Google Ads (Budget, Bidding) | 4,1 s | homepage-v2/camp |
 
 **Scény homepage tour neupravovat.** Homepage je zmrazená a jakákoli změna ve scéně se do ní propíše. Pro jiný příběh (jiná strategie, jiná čísla) udělat kopii pod novým jménem (`sets_roas.html/.css/.js`) a upravit tu.
 
@@ -54,7 +59,7 @@ Hotové scény:
 </body></html>
 ```
 
-Hlavičku, pruh ikon a kontextové menu zkopírovat z hotové scény stejné oblasti a jen přepnout aktivní položku a drobečky: `sets.html` (uvnitř datového zdroje), `campaigns.html` (uvnitř kampaně), `connect.html` (seznam Data sources), `pa.html` (Product analytics).
+Hlavičku, pruh ikon a kontextové menu zkopírovat z hotové scény stejné oblasti a jen přepnout aktivní položku a drobečky: `sets.html` (uvnitř datového zdroje), `campaigns.html` (uvnitř kampaně), `connect.html` (seznam Data sources), `pa.html` (Product analytics), `camp_setup.html` (kampaň v průvodci založení, menu kroků z `camp.css`).
 
 ## Kostra JS
 

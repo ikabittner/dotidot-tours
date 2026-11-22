@@ -1,0 +1,9 @@
+/* connect_v2 (homepage-v2): type picker as a grid of four boxes, form without the Example URLs panel */
+.cmodal { width: 980px !important; }
+.mgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 4px 0 8px; }
+.mgrid .ds-tile { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important; min-height: 150px; }
+.mgrid [data-tile-content] { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important; }
+.mgrid [data-tile-content-icon] svg { font-size: 36px !important; }
+.mgrid [data-tile-content-description] { font-size: var(--dds-text-body-md); }
+#scr-2 .vmain { justify-content: center; }
+.flink { display: inline-flex; align-items: center; gap: 6px; }

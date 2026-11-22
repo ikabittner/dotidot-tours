@@ -91,11 +91,13 @@ Kroky jdou za sebou. Mezi dvěma kroky ve stejné scéně tour přehraje časovo
 | `establish` | ne | `true`: nejdřív celá obrazovka appky, pak přiblížení. Dávat na první krok každé scény |
 | `el` | ano | `(doc) => prvek`, který se zvýrazní. U kliku musí návštěvník kliknout právě do něj |
 | `act` | ano | `'click'` (klik do appky) nebo `'read'` (tlačítko Next) |
-| `near` | ne | `(doc) => větší prvek`, vedle kterého má karta stát, aby nezakryla, o čem krok je |
+| `near` | ne | `(doc) => větší prvek`, o kterém krok je. Karta stojí vždy hned u `el` (šipka ukazuje na něj) a z možných stran vybere tu, kde `near` nezakryje; když to nejde, zakryje ho |
 | `dd` | ne | otevře dropdown scény: `{ id: 'ddVar', at: (doc) => kotva, align: 'right' }`. Dropdown je prvek `.tour-dd` s tímto id ve scéně |
 | `exit` | u posledního kroku scény a cesty | čas, kam se scéna dohraje při odchodu (do jiné scény nebo na závěr) |
 
-Karta se staví vpravo od prvku, když se nevejde, tak vlevo, pod nebo nad. Na telefonu je vždy pod oknem.
+Karta se staví hned u zvýrazněného prvku: vpravo, když se nevejde nebo by zakryla `near`, tak vlevo, pod nebo nad (od 22. 11. 2026, dřív stála u `near` a šipka mířila mimo). Na telefonu je vždy pod oknem.
+
+`establish` nedávat na první krok cesty, když kamera v tom čase už ukazuje celou obrazovku: rám jinak drží obrazovku 1,1 s a zoomuje 1,3 s a první karta naběhne pozdě.
 
 ### Jak najít časy (tc, cam, exit)
 

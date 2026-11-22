@@ -380,20 +380,25 @@ button:focus-visible { outline: 3px solid var(--paper); outline-offset: 2px; }
     arrow.style.display = '';
     if (narrow()) { arrow.style.display = 'none'; card.style.left = card.style.top = ''; return; }
     const ox = wb.left - sb.left, oy = wb.top - sb.top;
-    // the card sits beside the target, or beside a bigger element around it (near) so it never covers what the step is about
-    const n = st.near ? targetRect(st, st.near) : r;
-    const hx = ox + n.x, hy = oy + n.y, cw = card.offsetWidth, ch = card.offsetHeight, gap = 18, W = sb.width, H = sb.height;
-    const cy = oy + r.y + r.h / 2;
-    const fitsR = hx + n.w + gap + cw <= W - 8, fitsL = hx - gap - cw >= 8;
-    let x, y, side;
-    if (fitsR) { side = 'r'; x = hx + n.w + gap; y = cy - ch / 2; }
-    else if (fitsL) { side = 'l'; x = hx - gap - cw; y = cy - ch / 2; }
-    else if (hy + n.h + gap + ch <= H - 8) { side = 'b'; y = hy + n.h + gap; x = hx + n.w / 2 - cw / 2; }
-    else { side = 't'; y = hy - gap - ch; x = hx + n.w / 2 - cw / 2; }
-    x = Math.max(8, Math.min(W - cw - 8, x)); y = Math.max(8, Math.min(H - ch - 8, y));
+    // the card always stands right next to the target, so its arrow points at what to click or read.
+    // Sides in order right, left, below, above; the first that fits and stays off the bigger element around the
+    // target (near: what the step is about) wins, else the first that fits at all.
+    const n = st.near ? targetRect(st, st.near) : null;
+    const tx = ox + r.x, ty = oy + r.y, cw = card.offsetWidth, ch = card.offsetHeight, gap = 18, W = sb.width, H = sb.height;
+    const clampV = (v, a, b) => Math.max(a, Math.min(b, v));
+    const cands = ['r', 'l', 'b', 't'].map((side) => {
+      let x, y;
+      if (side === 'r' || side === 'l') { x = side === 'r' ? tx + r.w + gap : tx - gap - cw; y = clampV(ty + r.h / 2 - ch / 2, 8, H - ch - 8); }
+      else { y = side === 'b' ? ty + r.h + gap : ty - gap - ch; x = clampV(tx + r.w / 2 - cw / 2, 8, W - cw - 8); }
+      const fits = x >= 8 && x + cw <= W - 8 && y >= 8 && y + ch <= H - 8;
+      const hits = !!n && !(x + cw <= ox + n.x || x >= ox + n.x + n.w || y + ch <= oy + n.y || y >= oy + n.y + n.h);
+      return { side, x, y, fits, hits };
+    });
+    const c = cands.find((k) => k.fits && !k.hits) || cands.find((k) => k.fits) || cands[0];
+    const side = c.side, x = clampV(c.x, 8, W - cw - 8), y = clampV(c.y, 8, H - ch - 8);
     card.style.left = x + 'px'; card.style.top = y + 'px';
-    const ax = side === 'r' ? -7 : side === 'l' ? cw - 7 : Math.max(16, Math.min(cw - 30, ox + r.x + r.w / 2 - x - 7));
-    const ay = side === 'b' ? -7 : side === 't' ? ch - 7 : Math.max(16, Math.min(ch - 30, cy - y - 7));
+    const ax = side === 'r' ? -7 : side === 'l' ? cw - 7 : clampV(tx + r.w / 2 - x - 7, 16, cw - 30);
+    const ay = side === 'b' ? -7 : side === 't' ? ch - 7 : clampV(ty + r.h / 2 - y - 7, 16, ch - 30);
     arrow.style.left = ax + 'px'; arrow.style.top = ay + 'px';
   }
   function center() {
